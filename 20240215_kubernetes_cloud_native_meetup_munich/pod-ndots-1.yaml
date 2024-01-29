@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ndots-one
+spec:
+  containers:
+  - name: curl
+    image: curlimages/curl
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          curl -s http://www.example.com > /dev/null
+          sleep 0.05
+        done
+    imagePullPolicy: IfNotPresent
+    resources: {}
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "2"

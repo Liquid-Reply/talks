@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: first
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shell
+  namespace: first
+spec:
+  containers:
+  - name: netshoot
+    image: nicolaka/netshoot
+    command:
+      - /bin/sh
+      - -c
+      - sleep 3600
+    imagePullPolicy: IfNotPresent
+    resources: {}
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: first
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:stable
+    ports:
+      - containerPort: 80
+        name: http-web-svc
+    resources: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-first
+  namespace: first
+spec:
+  selector:
+    app.kubernetes.io/name: nginx
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http-web-svc
