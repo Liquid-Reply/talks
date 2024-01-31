@@ -24,7 +24,7 @@ patch-node-local-dns-cache-manifest:
 	$(eval KUBEDNS=$(shell kubectl get svc kube-dns -n kube-system -o jsonpath={.spec.clusterIP}))
 	$(shell sed -i '' "s/__PILLAR__LOCAL__DNS__/169.254.20.10/g; s/__PILLAR__DNS__DOMAIN__/cluster.local/g; s/__PILLAR__DNS__SERVER__/$(KUBEDNS)/g" manifests/nodelocaldns.yaml)
 
-deploy-node-local-dns-cache: download-nodelocaldns-manifest patch-nodelocaldns-manifest
+deploy-node-local-dns-cache: download-node-local-dns-cache-manifest patch-node-local-dns-cache-manifest
 	@kubectl apply -f manifests/nodelocaldns.yaml
 
 delete-node-local-dns-cache:
@@ -39,4 +39,4 @@ patch-coredns-configmap:
 configure-coredns: patch-coredns-configmap
 	@kubectl rollout restart deployment coredns -n kube-system
 
-.PHONY: deploy-kube-prometheus-stack grafana-port-forwarding deploy-resources start-shell-first start-shell-second follow-coredns-logs
+.PHONY: deploy-kube-prometheus-stack grafana-port-forwarding deploy-resources start-shell-first start-shell-second follow-coredns-logs deploy-node-local-dns-cache delete-node-local-dns-cache configure-coredns
