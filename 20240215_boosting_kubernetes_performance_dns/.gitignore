@@ -1,5 +1,6 @@
 internal.md
 
 /images/*.drawio
+/images/*.drawio.bkp
 
 .DS_Store
